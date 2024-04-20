@@ -1,4 +1,689 @@
- function handleRadioChange(selectedRadio) {
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculate your mortgage</title>
+  </head>
+  <style>
+    
+    .calculator-box {
+      padding: 30px 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 975px;
+      width: 90%;
+    }
+
+    @media screen and (max-width: 929px) {
+      .calculator-box {
+        max-width: 600px;
+        width: 70%;
+      }
+    }
+
+    .calculator-box .title {
+      padding: 0;
+      margin: 0;
+      margin-bottom: 20px;
+      font-size: 36px;
+    }
+
+    @media screen and (max-width: 599px) {
+      .calculator-box .title {
+        font-size: 25px;
+        text-align: center;
+      }
+    }
+
+    .calculator {
+      display: flex;
+      gap: 40px;
+    }
+
+    @media screen and (max-width: 929px) {
+      .calculator {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+    }
+
+    .column1 {
+      width: 45%;
+    }
+
+    .column2 {
+      width: calc(55% - 40px);
+    }
+
+    @media screen and (max-width: 929px) {
+      .column1,
+      .column2 {
+        width: 100%;
+      }
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    @media screen and (max-width: 599px) {
+      .radio-group {
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 20px;
+      }
+    }
+
+    .radio-group input[type="radio"] {
+      display: none;
+    }
+
+    .radio-group label {
+      padding: 10px 15px;
+
+      font-size: 14px;
+      font-weight: 500;
+
+      background-color: #f2f2f2;
+      color: #333;
+      border: 2px solid #d1d1d1;
+      border-radius: 5px;
+
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    @media screen and (max-width: 599px) {
+      .radio-group label {
+        font-size: 12px;
+      }
+    }
+
+    .radio-group label:hover,
+    .radio-group input[type="radio"]:checked + label {
+      background-color: #5645d0;
+      border: 2px solid transparent;
+      color: #fff;
+    }
+
+    .input-label {
+      margin: 0;
+      padding: 0;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #8b8b8b;
+      font-weight: 500;
+    }
+
+    @media screen and (max-width: 599px) {
+      .input-label {
+        font-size: 12px;
+      }
+    }
+
+    .input-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    @media screen and (max-width: 929px) {
+      .input-container {
+        flex-direction: column;
+      }
+    }
+
+    .input-box {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-box:nth-child(2),
+    .input-box:nth-child(3) {
+      margin-bottom: 25px;
+    }
+
+    .input-box .percentage {
+      position: absolute;
+      bottom: 0px;
+      right: 2px;
+      font-size: 16px;
+      background-color: #f2f2f2;
+      padding-right: 20px;
+      padding-left: 20px;
+    }
+
+    @media screen and (max-width: 599px) {
+      .input-box .percentage {
+        bottom: 1px;
+        font-size: 14px;
+      }
+    }
+
+    .text-input {
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 5px;
+      background-color: #f2f2f2;
+      color: #333;
+      border: 1px solid #d1d1d1;
+    }
+
+    .text-input::placeholder {
+      font-size: 16px;
+      color: #333;
+    }
+
+    @media screen and (max-width: 599px) {
+      .text-input,
+      .text-input::placeholder {
+        font-size: 14px;
+      }
+    }
+
+    .range-box {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .calculate-btn {
+      margin-top: 20px;
+      padding: 13px 40px;
+      font-weight: 500;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI,
+        Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Oxygen, Fira Sans,
+        Droid Sans, sans-serif;
+      font-size: 16px;
+      background-color: #5645d0;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+
+      cursor: pointer;
+      transition: all 0.3 ease;
+    }
+
+    .calculate-btn:hover {
+      background-color: #4d39e4;
+    }
+
+    @media screen and (max-width: 599px) {
+      .calculate-btn {
+        margin-top: 15px;
+        font-size: 14px;
+      }
+    }
+
+    .result-box {
+      margin-bottom: 10px;
+    }
+
+    .result-box .text-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+    }
+
+    .result-box.ml {
+      margin-left: 15px;
+    }
+
+    .result-box .text-box p {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .result-box .text-box p.l {
+      font-size: 25px;
+    }
+
+    @media screen and (max-width: 599px) {
+      .result-box .text-box p {
+        font-size: 16px;
+      }
+
+      .result-box .text-box p.l {
+        font-size: 16px;
+      }
+    }
+
+    .result-box .text-box p:first-child {
+      color: #8b8b8b;
+      font-weight: 500;
+    }
+
+    .result-box .text-box p:last-child {
+      color: #5645d0;
+      font-weight: 700;
+    }
+
+    .result-box.unbold .text-box p {
+      font-weight: 400;
+    }
+
+    .result-box.unbold .text-box p:last-child {
+      font-weight: 500;
+    }
+
+    .result-box .text-box p.unbold {
+      font-weight: 500;
+    }
+
+    .result-box .description {
+      margin: 0;
+      padding: 0;
+      font-size: 14px;
+      color: #cacaca;
+    }
+
+    @media screen and (max-width: 599px) {
+      .result-box .description {
+        margin: 0;
+        padding: 0;
+        font-size: 12px;
+        color: #cacaca;
+      }
+    }
+
+    .result-box .description:not(:last-child) {
+      margin-top: 5px;
+      margin-bottom: 2px;
+    }
+
+    @media screen and (max-width: 599px) {
+      .result-box .description:not(:last-child) {
+        margin-top: 2px;
+        margin-bottom: 2px;
+      }
+    }
+
+    .accordion-title,
+    .accordion-title1 {
+      display: flex;
+    }
+
+    .char {
+      display: block;
+      width: 15px;
+    }
+
+    .line {
+      background-color: #8b8b8b;
+      height: 2px;
+      width: 100%;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      opacity: 0.2;
+    }
+
+    .monthly-payments-box {
+      width: 100%;
+      font-size: 16px;
+      color: #8b8b8b;
+    }
+
+    @media screen and (max-width: 599px) {
+      .monthly-payments-box {
+        font-size: 12px;
+      }
+    }
+
+    .monthly-payments-box tr,
+    .monthly-payments-box th,
+    .monthly-payments-box td {
+      padding: 5px;
+      margin: 0;
+    }
+
+    .monthly-payments-box td {
+      padding-bottom: 2px;
+    }
+
+    @media screen and (max-width: 599px) {
+      .monthly-payments-box tr,
+      .monthly-payments-box th,
+      .monthly-payments-box td {
+        padding: 2px;
+      }
+    }
+
+    .monthly-payments-box .td-title {
+      text-align: left;
+      padding: 0;
+      color: #8b8b8b;
+      font-weight: 500;
+    }
+
+    .monthly-payments-box th {
+      font-weight: 500;
+      padding-bottom: 10px;
+    }
+
+    .monthly-payments-box td {
+      text-align: center;
+      color: #5645d0;
+      font-weight: 700;
+    }
+
+    .monthly-payments-box .monthly-percent {
+      padding: 0;
+      padding-bottom: 5px;
+      font-size: 12px;
+      color: #adadad;
+      font-weight: 400;
+    }
+
+    @media screen and (max-width: 599px) {
+      .monthly-payments-box .monthly-percent {
+        font-size: 10px;
+      }
+    }
+
+    .accordion-content1 {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+      background: white;
+      padding: 15px 0px 0px 15px;
+    }
+
+    #accordion-button-11 {
+      cursor: pointer;
+    }
+
+    .accordion-item1 {
+      display: none;
+    }
+
+    [aria-expanded="true"] ~ .accordion-content1 {
+      max-height: 500px;
+    }
+
+    input[type="range"].input-range {
+      height: 2.5em;
+      width: 200px;
+      -webkit-appearance: none;
+    }
+
+    /*progress support*/
+    input[type="range"].input-range.slider-progress {
+      --range: calc(var(--max) - var(--min));
+      --ratio: calc((var(--value) - var(--min)) / var(--range));
+      --sx: calc(0.5 * 1.4em + var(--ratio) * (100% - 1.4em));
+    }
+
+    input[type="range"].input-range:focus {
+      outline: none;
+    }
+
+    /*webkit*/
+    input[type="range"].input-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 1.4em;
+      height: 1.4em;
+      border-radius: 1em;
+      background: #fff;
+      border: none;
+      box-shadow: 0 0 2px black;
+      margin-top: calc(max((0.7em - 1px - 1px) * 0.5, 0px) - 1.4em * 0.5);
+    }
+
+    input[type="range"].input-range::-webkit-slider-runnable-track {
+      height: 0.7em;
+      border: 1px solid #b2b2b2;
+      border-radius: 0.5em;
+      background: #efefef;
+      box-shadow: none;
+    }
+
+    input[type="range"].input-range:hover::-webkit-slider-runnable-track {
+      border-color: #9a9a9a;
+    }
+
+    input[type="range"].input-range:active::-webkit-slider-runnable-track {
+      border-color: #c1c1c1;
+    }
+
+    input[type="range"].input-range.slider-progress::-webkit-slider-runnable-track {
+      background: linear-gradient(#5645d0, #5645d0) 0 / var(--sx) 100% no-repeat,
+        #efefef;
+    }
+
+    input[type="range"].input-range.slider-progress:hover::-webkit-slider-runnable-track {
+      background: linear-gradient(#5645d0, #5645d0) 0 / var(--sx) 100% no-repeat,
+        #efefef;
+    }
+
+    input[type="range"].input-range.slider-progress:active::-webkit-slider-runnable-track {
+      background: linear-gradient(#5645d0, #5645d0) 0 / var(--sx) 100% no-repeat,
+        #efefef;
+    }
+
+    /*mozilla*/
+    input[type="range"].input-range::-moz-range-thumb {
+      width: 1.4em;
+      height: 1.4em;
+      border-radius: 1em;
+      background: #fff;
+      border: none;
+      box-shadow: 0 0 2px black;
+    }
+
+    input[type="range"].input-range::-moz-range-track {
+      height: max(calc(0.7em - 1px - 1px), 0px);
+      border: 1px solid #b2b2b2;
+      border-radius: 0.5em;
+      background: #efefef;
+      box-shadow: none;
+    }
+
+    input[type="range"].input-range:hover::-moz-range-track {
+      border-color: #9a9a9a;
+    }
+
+    input[type="range"].input-range:active::-moz-range-track {
+      border-color: #c1c1c1;
+    }
+
+    input[type="range"].input-range.slider-progress::-moz-range-track {
+      background: linear-gradient(#5645d0, #5645d0) 0 / var(--sx) 100% no-repeat,
+        #efefef;
+    }
+
+    input[type="range"].input-range.slider-progress:hover::-moz-range-track {
+      background: linear-gradient(#5645d0, #5645d0) 0 / var(--sx) 100% no-repeat,
+        #efefef;
+    }
+
+    input[type="range"].input-range.slider-progress:active::-moz-range-track {
+      background: linear-gradient(#5645d0, #5645d0) 0 / var(--sx) 100% no-repeat,
+        #efefef;
+    }
+
+    /*ms*/
+    input[type="range"].input-range::-ms-fill-upper {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    input[type="range"].input-range::-ms-fill-lower {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    input[type="range"].input-range::-ms-thumb {
+      width: 1.4em;
+      height: 1.4em;
+      border-radius: 1em;
+      background: #fff;
+      border: none;
+      box-shadow: 0 0 2px black;
+      margin-top: 0;
+      box-sizing: border-box;
+    }
+
+    input[type="range"].input-range::-ms-track {
+      height: 0.7em;
+      border-radius: 0.5em;
+      background: #efefef;
+      border: 1px solid #b2b2b2;
+      box-shadow: none;
+      box-sizing: border-box;
+    }
+
+    input[type="range"].input-range:hover::-ms-track {
+      border-color: #9a9a9a;
+    }
+
+    input[type="range"].input-range:active::-ms-track {
+      border-color: #c1c1c1;
+    }
+
+    input[type="range"].input-range.slider-progress::-ms-fill-lower {
+      height: max(calc(0.7em - 1px - 1px), 0px);
+      border-radius: 0.5em 0 0 0.5em;
+      margin: -1px 0 -1px -1px;
+      background: #5645d0;
+      border: 1px solid #b2b2b2;
+      border-right-width: 0;
+    }
+
+    input[type="range"].input-range.slider-progress:hover::-ms-fill-lower {
+      background: #5645d0;
+      border-color: #9a9a9a;
+    }
+
+    input[type="range"].input-range.slider-progress:active::-ms-fill-lower {
+      background: #5645d0;
+      border-color: #c1c1c1;
+    }
+  </style>
+
+  <body>
+    <div class="calculator-box">
+      <h2 class="title">Calculate your mortgage</h2>
+
+      <div class="calculator first">
+        <div class="column1">
+          <form id="mortgageForm1">
+            <div>
+              <p class="input-label">Residency Status</p>
+              <div class="radio-group">
+                <input
+                  type="radio"
+                  id="uaeResident1"
+                  name="residency1"
+                  value="UAE Resident"
+                  checked
+                  onchange="updateTenorMax1(); updateDownPayment1(); handleRadioChange(this);"
+                />
+                <label for="uaeResident1" class="radio1">UAE Resident</label>
+
+                <input
+                  type="radio"
+                  id="uaeNational1"
+                  name="residency1"
+                  value="UAE National"
+                  onchange="updateTenorMax1(); updateDownPayment1(); handleRadioChange(this);"
+                />
+                <label for="uaeNational1" class="radio1">UAE National</label>
+
+                <input
+                  type="radio"
+                  id="nonResident1"
+                  name="residency1"
+                  value="Non Resident"
+                  onchange="updateTenorMax1(); updateDownPayment1(); handleRadioChange(this);"
+                />
+                <label for="nonResident1" class="radio1">Non Resident</label>
+              </div>
+            </div>
+
+            <div class="input-box">
+              <label for="propertyPrice1" class="input-label"
+                >Property Price</label
+              >
+              <input
+                class="text-input"
+                type="text"
+                id="propertyPrice1"
+                name="propertyPrice1"
+                placeholder="AED"
+                required
+                onchange="updateDownPayment1()"
+              />
+            </div>
+            <div class="input-box">
+              <label for="downPayment1" class="input-label">Down Payment</label>
+              <input
+                class="text-input"
+                type="text"
+                id="downPayment1"
+                name="downPayment1"
+                placeholder="AED"
+                min="0"
+                max="999999999"
+                onchange="updateDownPayment1()"
+              />
+              <p class="percentage"></p>
+            </div>
+            <div id="tenorContainer1" class="input-box">
+              <label for="tenor1" class="input-label">Tenor in Years</label>
+              <div class="range-box">
+                <input
+                  class="input-range slider-progress"
+                  type="range"
+                  id="tenor1"
+                  name="tenor1"
+                  min="1"
+                  step="1"
+                  value="25"
+                  max="25"
+                  oninput="updateTenorValue1();"
+                />
+                <output id="tenorValue1">25</output>
+              </div>
+            </div>
+            <!-- <button class="calculate-btn" type="button" onclick="calculate1();">
+              Calculate
+            </button> -->
+          </form>
+        </div>
+
+        <div class="column2">
+          <div id="results1"></div>
+          <div class="accordion1">
+            <div class="accordion-item1">
+              <div
+                class="result-box"
+                id="accordion-button-11"
+                aria-expanded="false"
+              >
+                <div class="text-box">
+                  <p class="accordion-title1">
+                    <span class="char">+</span>Fees
+                  </p>
+                  <p class="unbold">
+                    AED <span class="accordion-value1"></span>
+                  </p>
+                </div>
+              </div>
+              <div class="accordion-content1" id="fees1"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function handleRadioChange(selectedRadio) {
         document
           .querySelectorAll('input[name="residency1"]')
           .forEach((radio) => {
@@ -389,3 +1074,6 @@
             }
           });
         });
+    </script>
+  </body>
+</html>
