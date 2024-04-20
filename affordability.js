@@ -1,3 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculate your affordability</title>
+    <style>
+      
+      .calculator-box {
+        padding: 30px 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 975px;
+        width: 90%;
+      }
+
+      @media screen and (max-width: 929px) {
+        .calculator-box {
+          max-width: 600px;
+          width: 70%;
+        }
+      }
+
+      .calculator-box .title {
+        padding: 0;
+        margin: 0;
+        margin-bottom: 20px;
+        font-size: 36px;
+      }
+
+      @media screen and (max-width: 599px) {
+        .calculator-box .title {
+          font-size: 25px;
+          text-align: center;
+        }
+      }
+
+      .calculator {
+        display: flex;
+        gap: 40px;
+      }
+
+      @media screen and (max-width: 929px) {
+        .calculator {
+          display: flex;
+          flex-direction: column;
+          gap: 30px;
+        }
+      }
+
+      .column {
+        width: calc(50% - 20px);
+      }
+
+      @media screen and (max-width: 929px) {
+        .column {
+          width: 100%;
+        }
+      }
+
+      .radio-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+      }
+
+      @media screen and (max-width: 599px) {
+        .radio-group {
+          flex-direction: column;
+          gap: 5px;
+          margin-bottom: 20px;
+        }
+      }
+
+      .radio-group input[type="radio"] {
+        display: none;
+      }
+
+      .radio-group label {
+        padding: 10px 15px;
+
+        font-size: 14px;
+        font-weight: 500;
+
+        background-color: #f2f2f2;
+        color: #333;
+        border: 2px solid #d1d1d1;
+        border-radius: 5px;
+
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      @media screen and (max-width: 599px) {
+        .radio-group label {
+          font-size: 12px;
+        }
+      }
+
+      .radio-group label:hover,
+      .radio-group input[type="radio"]:checked + label {
+        background-color: #5645d0;
+        border: 2px solid transparent;
+        color: #fff;
+      }
+
+      .input-label {
+        margin: 0;
+        padding: 0;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #8b8b8b;
+        font-weight: 500;
+      }
+
+      @media screen and (max-width: 599px) {
+        .input-label {
+          font-size: 12px;
+        }
+      }
+
+      .input-container {
+        display: flex;
+        gap: 10px;
+      }
+
+      @media screen and (max-width: 929px) {
+        .input-container {
+          flex-direction: column;
+        }
+      }
+
+      .input-container .input-box {
+        width: calc(50% - 5px);
+      }
+
+      @media screen and (max-width: 929px) {
+        .input-container .input-box {
+          width: 100%;
+        }
+      }
+
+      .input-box {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .text-input {
+        padding: 15px;
+        font-size: 16px;
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        color: #333;
+        border: 1px solid #d1d1d1;
+      }
+
+      .text-input::placeholder {
+        font-size: 16px;
+        color: #333;
+      }
+
+      @media screen and (max-width: 599px) {
+        .text-input,
+        .text-input::placeholder {
+          font-size: 14px;
+        }
+      }
+
+      .calculate-btn {
+        margin-top: 20px;
+        padding: 13px 40px;
+        font-weight: 500;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI,
+          Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Oxygen,
+          Fira Sans, Droid Sans, sans-serif;
+        font-size: 16px;
+        background-color: #5645d0;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+
+        cursor: pointer;
+        transition: all 0.3 ease;
+      }
+
+      .calculate-btn:hover {
+        background-color: #4d39e4;
+      }
+
+      @media screen and (max-width: 599px) {
+        .calculate-btn {
+          margin-top: 15px;
+          font-size: 14px;
+        }
+      }
+
+      .result-box {
+        margin-bottom: 10px;
+      }
+
+      .result-box .text-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+      }
+
+      .result-box.ml {
+        margin-left: 15px;
+      }
+
+      .result-box .text-box p {
+        margin: 0;
+        font-size: 16px;
+      }
+
+      .result-box .text-box p.l {
+        font-size: 25px;
+      }
+
+      @media screen and (max-width: 599px) {
+        .result-box .text-box p {
+          font-size: 12px;
+        }
+
+        .result-box .text-box p.l {
+          font-size: 18px;
+        }
+      }
+
+      .result-box .text-box p:first-child {
+        color: #8b8b8b;
+        font-weight: 500;
+      }
+
+      .result-box .text-box p:last-child {
+        color: #5645d0;
+        font-weight: 700;
+      }
+
+      .result-box.unbold .text-box p {
+        font-weight: 400;
+      }
+
+      .result-box.unbold .text-box p:last-child {
+        font-weight: 500;
+      }
+
+      .result-box .text-box p.unbold {
+        font-weight: 500;
+      }
+
+      .result-box .description {
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+        color: #cacaca;
+      }
+
+      @media screen and (max-width: 599px) {
+        .result-box .description {
+          margin: 0;
+          padding: 0;
+          font-size: 12px;
+          color: #cacaca;
+        }
+      }
+
+      .result-box .description:not(:last-child) {
+        margin-top: 5px;
+        margin-bottom: 2px;
+      }
+
+      @media screen and (max-width: 599px) {
+        .result-box .description:not(:last-child) {
+          margin-top: 2px;
+          margin-bottom: 2px;
+        }
+      }
+
+      .accordion-title {
+        display: flex;
+      }
+
+      .char {
+        display: block;
+        width: 15px;
+      }
+
+      .line {
+        background-color: #8b8b8b;
+        height: 2px;
+        width: 100%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        opacity: 0.2;
+      }
+
+      .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+        background: white;
+        padding: 15px 0px 0px 15px;
+      }
+
+      #accordion-button-1 {
+        cursor: pointer;
+      }
+
+      .accordion-item {
+        display: none;
+      }
+
+      [aria-expanded="true"] ~ .accordion-content {
+        max-height: 500px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="calculator-box">
+      <h2 class="title">Calculate your affordability</h2>
+      <div class="calculator second">
+        <div class="column">
+          <div>
+            <p class="input-label">Residency Status</p>
+            <div class="radio-group">
+              <input
+                type="radio"
+                id="uaeResident"
+                name="residency"
+                value="UAE Resident"
+                checked
+              />
+              <label for="uaeResident" class="radio">UAE Resident</label>
+
+              <input
+                type="radio"
+                id="uaeNational"
+                name="residency"
+                value="UAE National"
+              />
+              <label for="uaeNational" class="radio">UAE National</label>
+
+              <input
+                type="radio"
+                id="nonResident"
+                name="residency"
+                value="Non Resident"
+              />
+              <label for="nonResident" class="radio">Non Resident</label>
+            </div>
+          </div>
+
+          <div>
+            <p class="input-label">Employment Type</p>
+            <div class="radio-group">
+              <input
+                type="radio"
+                id="employed"
+                name="employment"
+                value="Employed"
+                checked
+              />
+              <label for="employed" class="radio">Employed</label>
+              <input
+                type="radio"
+                id="selfEmployed"
+                name="employment"
+                value="Self-employed"
+              />
+              <label for="selfEmployed" class="radio">Self-employed</label>
+            </div>
+          </div>
+
+          <div class="input-container">
+            <div class="input-box">
+              <label for="monthlyIncome" class="input-label"
+                >Monthly Income</label
+              >
+              <input
+                class="text-input"
+                type="text"
+                id="monthlyIncome"
+                placeholder="AED"
+                step="1"
+              />
+            </div>
+
+            <div class="input-box">
+              <label for="monthlyDebt" class="input-label">Monthly Debt</label>
+              <input
+                class="text-input"
+                type="text"
+                id="monthlyDebt"
+                placeholder="AED"
+                step="1"
+              />
+            </div>
+          </div>
+
+          <!-- <button class="calculate-btn" onclick="calculate()">Calculate</button> -->
+        </div>
+
+        <div class="column">
+          <div id="results"></div>
+          <div class="accordion">
+            <div class="accordion-item">
+              <div
+                class="result-box"
+                id="accordion-button-1"
+                aria-expanded="false"
+              >
+                <div class="text-box">
+                  <p class="accordion-title"><span class="char">+</span>Fees</p>
+                  <p class="unbold">
+                    AED <span class="accordion-value"></span>
+                  </p>
+                </div>
+              </div>
+              <div class="accordion-content" id="fees"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
       const monthlyDebtInput = document.getElementById("monthlyDebt");
       monthlyDebtInput.value = 0;
 
@@ -257,3 +686,5 @@
         </div>`;
       }
     </script>
+  </body>
+</html>
